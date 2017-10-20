@@ -9,8 +9,15 @@ import net.corda.core.flows.*
 import net.corda.core.transactions.TransactionBuilder
 import net.corda.core.utilities.ProgressTracker
 
-import net.corda.core.utilities.ProgressTracker.Step
-
+/**
+ * Creates a Heartbeat state on the ledger.
+ *
+ * Every Heartbeat state has a scheduled activity to start a flow to consume itself and produce a
+ * new Heartbeat state on the ledger after five seconds.
+ *
+ * By consuming the existing Heartbeat state and creating a new one, a new scheduled activity is
+ * created.
+ */
 @InitiatingFlow
 @StartableByRPC
 class StartHeartbeatFlow : FlowLogic<Unit>() {
@@ -28,20 +35,17 @@ class StartHeartbeatFlow : FlowLogic<Unit>() {
     }
 }
 
+/**
+ * This is the flow that a Heartbeat state runs when it consumes itself to create a new Heartbeat
+ * state on the ledger.
+ */
 @InitiatingFlow
 @SchedulableFlow
 class HeartbeatFlow(private val stateRef: StateRef) : FlowLogic<String>() {
-    companion object {
-        object TOKEN_STEP : Step("Generating transaction based on new IOU.")
-
-        fun tracker() = ProgressTracker(TOKEN_STEP)
-    }
-
-    override val progressTracker = tracker()
+    override val progressTracker = ProgressTracker()
 
     @Suspendable
     override fun call(): String {
-        progressTracker.currentStep = TOKEN_STEP
         val input = serviceHub.toStateAndRef<HeartState>(stateRef)
         val output = HeartState(ourIdentity)
         val beatCmd = Command(Beat(), ourIdentity.owningKey)

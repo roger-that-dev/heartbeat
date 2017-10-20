@@ -10,6 +10,8 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
+// TODO: Create some flow tests.
+
 class FlowTests {
     lateinit var network: MockNetwork
     lateinit var a: StartedNode<MockNode>
