@@ -1,6 +1,6 @@
 package com.heartbeat
 
-import net.corda.core.utilities.getOrThrow
+import net.corda.client.rpc.notUsed
 import net.corda.node.internal.StartedNode
 import net.corda.testing.node.MockNetwork
 import net.corda.testing.node.MockNetwork.MockNode
@@ -9,8 +9,7 @@ import net.corda.testing.unsetCordappPackages
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-
-// TODO: Create some flow tests.
+import kotlin.test.assertEquals
 
 class FlowTests {
     lateinit var network: MockNetwork
@@ -31,9 +30,20 @@ class FlowTests {
     }
 
     @Test
-    fun `dummy test`() {
+    fun `heartbeat occurs every second`() {
         val flow = StartHeartbeatFlow()
-        val future = a.services.startFlow(flow).resultFuture
-        future.getOrThrow()
+        a.services.startFlow(flow).resultFuture
+
+        val enoughTimeForFiveScheduledTxs: Long = 5500
+        Thread.sleep(enoughTimeForFiveScheduledTxs)
+
+        val recordedTxs = a.database.transaction {
+            val (recordedTxs, futureTxs) = a.services.validatedTransactions.track()
+            futureTxs.notUsed()
+            recordedTxs
+        }
+
+        val originalTxPlusFiveScheduledTxs = 6
+        assertEquals(originalTxPlusFiveScheduledTxs, recordedTxs.size)
     }
 }

@@ -5,7 +5,7 @@ import net.corda.core.contracts.Contract
 import net.corda.core.transactions.LedgerTransaction
 
 /**
- * A blank contract and command, required for building a Heartbeat state transaction.
+ * A blank contract and command, solely used for building a valid Heartbeat state transaction.
  */
 open class HeartContract : Contract {
     companion object {

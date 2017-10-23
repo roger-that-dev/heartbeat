@@ -11,7 +11,7 @@ import java.time.Instant
  * Every Heartbeat state has a scheduled activity to start a flow to consume itself and produce a
  * new Heartbeat state on the ledger after five seconds.
  *
- * @property me The creator of the Heartbeat state.
+ * @param me The creator of the Heartbeat state.
  * @property nextActivityTime When the scheduled activity should be kicked off.
  */
 class HeartState(private val me: Party) : SchedulableState {
