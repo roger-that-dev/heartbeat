@@ -15,12 +15,15 @@ import java.time.Instant
  * @property nextActivityTime When the scheduled activity should be kicked off.
  */
 class HeartState(private val me: Party) : SchedulableState {
+    
     override val participants get() = listOf(me)
+    
     // A heartbeat will be emitted every second.
-    // Do not use Instant.now or other methods to get the current time in nextScheduledActivity,
-    // or the time will be constantly re-evaluated and always be in the future.
+    // Do not use Instant.now or other methods (WHICH OTHER METHODS?) to get the current time in nextScheduledActivity,
+    // or the time will be constantly re-evaluated and always be in the future. COULD THIS BE CLEARER? I THOUGHT THE TIME SHOULD BE IN THE FUTURE ANYWAY?  
     private val nextActivityTime = Instant.now().plusSeconds(1)
 
+    // MAYBE EXPLAIN WHAT THIS IS DOING?
     override fun nextScheduledActivity(thisStateRef: StateRef, flowLogicRefFactory: FlowLogicRefFactory): ScheduledActivity? {
         return ScheduledActivity(flowLogicRefFactory.create(HeartbeatFlow::class.java, thisStateRef), nextActivityTime)
     }
