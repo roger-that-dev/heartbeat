@@ -34,6 +34,6 @@ If you now start monitoring the node's flow activity...
 
     flow watch
 
-...you will see the `Heartbeat` flow running every second until you shut down the node: // HOW TO SHUT DOWN THE NODE? 
+...you will see the `Heartbeat` flow running every second until you shut down the node: // HOW TO SHUT DOWN THE NODE? Actually though you press ctrl + c to stop the flow watch window. Then ctrl + c, again to shutdown the node.
 
     xxxxxxxx-xxxx-xxxx-xx Heartbeat xxxxxxxxxxxxxxxxxxxx Lub-dub
